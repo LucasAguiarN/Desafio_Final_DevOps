@@ -1,0 +1,22 @@
+name: CI Desafio Final
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clonando repositório via Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar Python na maquina
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.9"
+
+      - name: Instalar dependências do projeto
+        run: pip install -r requirements.txt
+
+      - name: Rodar testes unitários
+        run: python -m unittest discover
