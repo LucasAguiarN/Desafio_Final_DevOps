@@ -1,6 +1,8 @@
 name: CI Desafio Final
 
-on: [push]
+on:
+  push:
+  workflow_dispatch:
 
 jobs:
   build:
