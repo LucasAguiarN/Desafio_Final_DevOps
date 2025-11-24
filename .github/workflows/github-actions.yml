@@ -20,5 +20,38 @@ jobs:
       - name: Instalar dependências do projeto
         run: pip install -r requirements.txt
 
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Clonando repositório via Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar Python na maquina
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.9"
+
+      - name: Instalar dependências do projeto
+        run: pip install -r requirements.txt
+        
       - name: Rodar testes unitários
         run: python -m unittest discover
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Deploy usando action do Render
+        uses: johnbeynon/render-deploy-action@v0.0.3
+        with:
+          serviceId: srv-d4h3kd2dbo4c73b87ck0
+          apiKey: ${{ secrets.RENDER_API_KEY }}
+          clearCache: false
+
+      - name: Deploy Hook no Render
+        run: |
+          curl -X POST "${{ secrets.HOOK_LUCAS }}"
+          echo "Sinal de deploy enviado ao Render."
